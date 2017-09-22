@@ -1,9 +1,26 @@
 import React, { Component } from 'react';
-
+import axios from 'axios';
 import Navbar from './partials/Navbar';
+import HomeItem from './partials/HomeItem';
 
 class LayoutHome extends Component {  
-  render() {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            items: []
+        };
+    }
+
+    componentDidMount() {
+        axios.get('https://randomuser.me/api/?results=16&nat=FR')
+          .then(response => {
+            console.log(response.data.results);
+            this.setState({ items : response.data.results });
+          });
+    }
+
+    render() {
     return (
             <div id="home">
                 <Navbar />
@@ -14,6 +31,9 @@ class LayoutHome extends Component {
                         </div>
                     </div>
                     <div className="container">
+                        <div className="row">
+                            {this.state.items.map(result => <HomeItem key={result.email} result={result} />)}
+                        </div>
                     </div>
             </div>
        );
